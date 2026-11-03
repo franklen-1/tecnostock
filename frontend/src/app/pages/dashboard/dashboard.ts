@@ -9,6 +9,7 @@ import { DashboardService } from '../../core/services/dashboard.service';
   selector: 'app-dashboard',
   imports: [CurrencyPipe, RouterLink],
   templateUrl: './dashboard.html',
+  styleUrl: './dashboard.css',
 })
 export class Dashboard {
   private servicio = inject(DashboardService);

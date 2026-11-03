@@ -1,19 +1,149 @@
-<h1>Panel principal</h1>
-@if (datos(); as d) {
-  <div class="grid-indicadores">
-    <div class="tarjeta indicador">
-      <span class="muted">Productos activos</span>
-      <strong>{{ d.productos_activos }}</strong>
+<div class="dashboard">
+
+  <!-- ENCABEZADO -->
+  <header class="dashboard-header">
+    <div>
+      <span class="saludo">BIENVENIDO A</span>
+      <h1>TecnoStock</h1>
+      <p>Resumen general de tu inventario</p>
     </div>
-    <a class="tarjeta indicador" [class.peligro]="d.productos_stock_bajo > 0" routerLink="/stock-bajo">
-      <span class="muted">Productos con stock bajo</span>
-      <strong>{{ d.productos_stock_bajo }}</strong>
+
+    <a routerLink="/productos" class="btn-principal">
+      + Ver productos
     </a>
-    <div class="tarjeta indicador">
-      <span class="muted">Valor referencial del inventario (a precio de compra)</span>
-      <strong>{{ d.valor_inventario | currency: 'PEN' : 'S/ ' }}</strong>
+  </header>
+
+  @if (datos(); as d) {
+
+    <!-- TARJETAS DE INDICADORES -->
+    <section class="grid-indicadores">
+
+      <article class="tarjeta indicador">
+        <div class="indicador-superior">
+          <span>Productos activos</span>
+          <span class="icono-indicador">▣</span>
+        </div>
+
+        <strong>{{ d.productos_activos }}</strong>
+        <small>Productos registrados en el sistema</small>
+      </article>
+
+      <a
+        class="tarjeta indicador"
+        [class.peligro]="d.productos_stock_bajo > 0"
+        routerLink="/stock-bajo">
+
+        <div class="indicador-superior">
+          <span>Productos con stock bajo</span>
+          <span class="icono-indicador">!</span>
+        </div>
+
+        <strong>{{ d.productos_stock_bajo }}</strong>
+        <small>Requieren atención y reposición</small>
+      </a>
+
+      <article class="tarjeta indicador">
+        <div class="indicador-superior">
+          <span>Valor del inventario</span>
+          <span class="icono-indicador">S/</span>
+        </div>
+
+        <strong>
+          {{ d.valor_inventario | currency:'PEN':'S/ ' }}
+        </strong>
+        <small>Calculado a precio de compra</small>
+      </article>
+
+    </section>
+
+    <!-- SECCIÓN INFERIOR -->
+    <section class="seccion-inferior">
+
+      <article class="tarjeta panel-informativo">
+        <div class="panel-titulo">
+          <div>
+            <h2>Gestión de inventario</h2>
+            <p>Accede rápidamente a los módulos principales</p>
+          </div>
+          <span class="icono-panel">▦</span>
+        </div>
+
+        <div class="accesos-grid">
+
+          <a routerLink="/productos" class="acceso">
+            <span class="acceso-icono">▤</span>
+            <div>
+              <strong>Productos</strong>
+              <small>Consultar y administrar productos</small>
+            </div>
+            <span class="flecha">›</span>
+          </a>
+
+          <a routerLink="/categorias" class="acceso">
+            <span class="acceso-icono">▧</span>
+            <div>
+              <strong>Categorías</strong>
+              <small>Organizar productos</small>
+            </div>
+            <span class="flecha">›</span>
+          </a>
+
+          <a routerLink="/movimientos" class="acceso">
+            <span class="acceso-icono">⇄</span>
+            <div>
+              <strong>Entradas y salidas</strong>
+              <small>Controlar movimientos de stock</small>
+            </div>
+            <span class="flecha">›</span>
+          </a>
+
+          <a routerLink="/historial" class="acceso">
+            <span class="acceso-icono">◷</span>
+            <div>
+              <strong>Historial</strong>
+              <small>Consultar operaciones anteriores</small>
+            </div>
+            <span class="flecha">›</span>
+          </a>
+
+        </div>
+      </article>
+
+      <article class="tarjeta panel-alertas">
+        <div class="panel-titulo">
+          <div>
+            <h2>Estado del inventario</h2>
+            <p>Resumen de productos que necesitan atención</p>
+          </div>
+          <span class="icono-panel">!</span>
+        </div>
+
+        <div class="alerta-stock">
+          <div class="alerta-icono">!</div>
+          <div>
+            <strong>Stock bajo</strong>
+            <p>
+              Tienes {{ d.productos_stock_bajo }}
+              productos que requieren revisión.
+            </p>
+          </div>
+        </div>
+
+        <a routerLink="/stock-bajo" class="btn-secundario">
+          Revisar productos
+          <span>→</span>
+        </a>
+      </article>
+
+    </section>
+
+  } @else {
+
+    <div class="tarjeta cargando">
+      <span class="loader"></span>
+      <p class="muted">Cargando indicadores...</p>
     </div>
-  </div>
-} @else {
-  <p class="muted">Cargando indicadores…</p>
-}
+
+  }
+
+</div>
