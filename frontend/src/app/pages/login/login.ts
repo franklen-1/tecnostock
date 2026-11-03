@@ -10,6 +10,7 @@ import { mensajeError } from '../../core/utils';
   selector: 'app-login',
   imports: [FormField],
   templateUrl: './login.html',
+   styleUrl: './login.css'
 })
 export class Login {
   private auth = inject(AuthService);

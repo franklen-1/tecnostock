@@ -1,25 +1,51 @@
-# Node
+# =========================
+# NODE / ANGULAR
+# =========================
 node_modules/
 dist/
 .angular/
 coverage/
 
-# Variables de entorno
+# =========================
+# PYTHON
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# ENTORNOS VIRTUALES
+# =========================
+.venv/
+venv/
+env/
+
+# =========================
+# VARIABLES DE ENTORNO
+# =========================
 .env
 .env.*
 !.env.example
 
-# Logs
+# =========================
+# LOGS
+# =========================
 *.log
 npm-debug.log*
 
-# Visual Studio Code
+# =========================
+# VISUAL STUDIO CODE
+# =========================
 .vscode/
 
-# Sistema
+# =========================
+# SISTEMA
+# =========================
 .DS_Store
 Thumbs.db
 
-# Archivos temporales
+# =========================
+# ARCHIVOS TEMPORALES
+# =========================
 *.tmp
 *.bak
