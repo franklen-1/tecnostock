@@ -1,0 +1,23 @@
+<div class="login-fondo">
+  <form class="tarjeta login-caja" (submit)="ingresar($event)" novalidate>
+    <h1>TecnoStock</h1>
+    <p class="muted">Inicia sesión para administrar el inventario.</p>
+
+    <label>Usuario
+      <input type="text" [formField]="formulario.username" autocomplete="username" />
+    </label>
+    @if (formulario.username().touched() && formulario.username().invalid()) {
+      @for (e of formulario.username().errors(); track e) { <small class="error">{{ e.message }}</small> }
+    }
+
+    <label>Contraseña
+      <input type="password" [formField]="formulario.password" autocomplete="current-password" />
+    </label>
+    @if (formulario.password().touched() && formulario.password().invalid()) {
+      @for (e of formulario.password().errors(); track e) { <small class="error">{{ e.message }}</small> }
+    }
+
+    @if (error()) { <div class="alerta alerta-error">{{ error() }}</div> }
+    <button class="btn" type="submit">Ingresar</button>
+  </form>
+</div>

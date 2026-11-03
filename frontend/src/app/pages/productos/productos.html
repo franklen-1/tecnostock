@@ -1,0 +1,124 @@
+<div class="encabezado">
+  <h1>Productos</h1>
+  <button class="btn" (click)="nuevo()">Nuevo producto</button>
+</div>
+
+@if (mensaje()) { <div class="alerta alerta-ok">{{ mensaje() }}</div> }
+@if (error() && !mostrarFormulario()) { <div class="alerta alerta-error">{{ error() }}</div> }
+
+@if (mostrarFormulario()) {
+  <form class="tarjeta formulario" (submit)="guardar($event)" novalidate>
+    <h2>{{ editandoId() === null ? 'Nuevo producto' : 'Editar producto' }}</h2>
+
+    <div class="grid-form">
+      <div>
+        <label>Código <input type="text" [formField]="formulario.codigo" /></label>
+        @if (formulario.codigo().touched() && formulario.codigo().invalid()) {
+          @for (e of formulario.codigo().errors(); track e) { <small class="error">{{ e.message }}</small> }
+        }
+      </div>
+
+      <div>
+        <label>Nombre <input type="text" [formField]="formulario.nombre" /></label>
+        @if (formulario.nombre().touched() && formulario.nombre().invalid()) {
+          @for (e of formulario.nombre().errors(); track e) { <small class="error">{{ e.message }}</small> }
+        }
+      </div>
+
+      <div>
+        <label>Categoría
+          <select [formField]="formulario.id_categoria">
+            <option value="">Selecciona…</option>
+            @for (c of categorias(); track c.id_categoria) {
+              <option [value]="c.id_categoria">{{ c.nombre }}</option>
+            }
+          </select>
+        </label>
+        @if (formulario.id_categoria().touched() && formulario.id_categoria().invalid()) {
+          @for (e of formulario.id_categoria().errors(); track e) { <small class="error">{{ e.message }}</small> }
+        }
+      </div>
+
+      <div>
+        <label>Precio de compra <input type="number" step="0.01" [formField]="formulario.precio_compra" /></label>
+        @if (formulario.precio_compra().touched() && formulario.precio_compra().invalid()) {
+          @for (e of formulario.precio_compra().errors(); track e) { <small class="error">{{ e.message }}</small> }
+        }
+      </div>
+
+      <div>
+        <label>Precio de venta <input type="number" step="0.01" [formField]="formulario.precio_venta" /></label>
+        @if (formulario.precio_venta().touched() && formulario.precio_venta().invalid()) {
+          @for (e of formulario.precio_venta().errors(); track e) { <small class="error">{{ e.message }}</small> }
+        }
+      </div>
+
+      <div>
+        <label>Stock mínimo <input type="number" step="1" [formField]="formulario.stock_minimo" /></label>
+        @if (formulario.stock_minimo().touched() && formulario.stock_minimo().invalid()) {
+          @for (e of formulario.stock_minimo().errors(); track e) { <small class="error">{{ e.message }}</small> }
+        }
+      </div>
+    </div>
+
+    <label>Descripción (opcional) <input type="text" [formField]="formulario.descripcion" /></label>
+    @if (formulario.descripcion().touched() && formulario.descripcion().invalid()) {
+      @for (e of formulario.descripcion().errors(); track e) { <small class="error">{{ e.message }}</small> }
+    }
+
+    @if (error()) { <div class="alerta alerta-error">{{ error() }}</div> }
+    <div class="acciones">
+      <button class="btn" type="submit">Guardar</button>
+      <button class="btn btn-ghost" type="button" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+}
+
+<div class="tarjeta filtros">
+  <input type="search" placeholder="Buscar por código o nombre" [value]="busqueda()"
+         (input)="alBuscar($any($event.target).value)" />
+  <select (change)="alFiltrarCategoria($any($event.target).value)">
+    <option value="0">Todas las categorías</option>
+    @for (c of categorias(); track c.id_categoria) {
+      <option [value]="c.id_categoria">{{ c.nombre }}</option>
+    }
+  </select>
+  <label class="check">
+    <input type="checkbox" [checked]="soloActivos()" (change)="alCambiarActivos($any($event.target).checked)" />
+    Solo activos
+  </label>
+</div>
+
+<div class="tarjeta tabla-contenedor">
+  <table>
+    <thead>
+      <tr>
+        <th>Código</th><th>Producto</th><th>Categoría</th>
+        <th class="num">P. compra</th><th class="num">P. venta</th>
+        <th class="num">Stock</th><th class="num">Mínimo</th><th>Estado</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of productos(); track p.id_producto) {
+        <tr [class.inactivo]="!p.activo">
+          <td>{{ p.codigo }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.categoria }}</td>
+          <td class="num">{{ p.precio_compra | currency: 'PEN' : 'S/ ' }}</td>
+          <td class="num">{{ p.precio_venta | currency: 'PEN' : 'S/ ' }}</td>
+          <td class="num">
+            <span class="badge" [class.badge-peligro]="p.stock_actual <= p.stock_minimo">{{ p.stock_actual }}</span>
+          </td>
+          <td class="num">{{ p.stock_minimo }}</td>
+          <td>{{ p.activo ? 'Activo' : 'Inactivo' }}</td>
+          <td class="acciones">
+            <button class="btn btn-ghost" (click)="editar(p)">Editar</button>
+            <button class="btn btn-ghost" (click)="cambiarEstado(p)">{{ p.activo ? 'Desactivar' : 'Activar' }}</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="9" class="muted">No se encontraron productos.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

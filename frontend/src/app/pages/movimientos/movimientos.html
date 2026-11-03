@@ -1,0 +1,49 @@
+<h1>Entradas y salidas</h1>
+
+<div class="tabs">
+  <button class="btn" [class.btn-ghost]="tipo() !== 'E'" (click)="cambiarTipo('E')">Registrar entrada</button>
+  <button class="btn" [class.btn-ghost]="tipo() !== 'S'" (click)="cambiarTipo('S')">Registrar salida</button>
+</div>
+
+<form class="tarjeta formulario" (submit)="registrar($event)" novalidate>
+  <h2>{{ tipo() === 'E' ? 'Nueva entrada' : 'Nueva salida' }}</h2>
+
+  <label>Producto
+    <select [formField]="formulario.id_producto">
+      <option value="">Selecciona…</option>
+      @for (p of productos(); track p.id_producto) {
+        <option [value]="p.id_producto">{{ p.codigo }} — {{ p.nombre }}</option>
+      }
+    </select>
+  </label>
+  @if (formulario.id_producto().touched() && formulario.id_producto().invalid()) {
+    @for (e of formulario.id_producto().errors(); track e) { <small class="error">{{ e.message }}</small> }
+  }
+  @if (productoSeleccionado(); as p) {
+    <p class="muted">Stock actual: <strong>{{ p.stock_actual }}</strong> (mínimo {{ p.stock_minimo }})</p>
+  }
+
+  <div class="grid-form">
+    <div>
+      <label>Cantidad <input type="number" step="1" [formField]="formulario.cantidad" /></label>
+      @if (formulario.cantidad().touched() && formulario.cantidad().invalid()) {
+        @for (e of formulario.cantidad().errors(); track e) { <small class="error">{{ e.message }}</small> }
+      }
+    </div>
+    <div>
+      <label>Fecha y hora <input type="datetime-local" [formField]="formulario.fecha" /></label>
+      @if (formulario.fecha().touched() && formulario.fecha().invalid()) {
+        @for (e of formulario.fecha().errors(); track e) { <small class="error">{{ e.message }}</small> }
+      }
+    </div>
+  </div>
+
+  <label>Motivo <input type="text" [formField]="formulario.motivo" /></label>
+  @if (formulario.motivo().touched() && formulario.motivo().invalid()) {
+    @for (e of formulario.motivo().errors(); track e) { <small class="error">{{ e.message }}</small> }
+  }
+
+  @if (mensaje()) { <div class="alerta alerta-ok">{{ mensaje() }}</div> }
+  @if (error()) { <div class="alerta alerta-error">{{ error() }}</div> }
+  <button class="btn" type="submit">{{ tipo() === 'E' ? 'Registrar entrada' : 'Registrar salida' }}</button>
+</form>

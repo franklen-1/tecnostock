@@ -1,0 +1,19 @@
+<h1>Panel principal</h1>
+@if (datos(); as d) {
+  <div class="grid-indicadores">
+    <div class="tarjeta indicador">
+      <span class="muted">Productos activos</span>
+      <strong>{{ d.productos_activos }}</strong>
+    </div>
+    <a class="tarjeta indicador" [class.peligro]="d.productos_stock_bajo > 0" routerLink="/stock-bajo">
+      <span class="muted">Productos con stock bajo</span>
+      <strong>{{ d.productos_stock_bajo }}</strong>
+    </a>
+    <div class="tarjeta indicador">
+      <span class="muted">Valor referencial del inventario (a precio de compra)</span>
+      <strong>{{ d.valor_inventario | currency: 'PEN' : 'S/ ' }}</strong>
+    </div>
+  </div>
+} @else {
+  <p class="muted">Cargando indicadores…</p>
+}

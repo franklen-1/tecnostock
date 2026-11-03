@@ -1,0 +1,91 @@
+/* Estilos globales de TecnoStock. Responsive: escritorio, tableta y móvil. */
+:root {
+  --tinta: #1f2d3d;
+  --acento: #0e7c86;
+  --acento-oscuro: #0a5d65;
+  --fondo: #f4f5f3;
+  --superficie: #ffffff;
+  --borde: #d9ded9;
+  --texto-suave: #5d6b78;
+  --peligro: #b3392f;
+  --peligro-fondo: #fbe9e7;
+  --ok: #1f7a4d;
+  --ok-fondo: #e4f4ea;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--fondo); color: var(--tinta); }
+h1 { font-size: 1.6rem; margin: 0 0 1rem; }
+h2 { font-size: 1.15rem; margin: 0 0 .75rem; }
+.muted { color: var(--texto-suave); }
+.num { text-align: right; }
+
+/* ---------- Layout ---------- */
+.shell { min-height: 100vh; display: grid; grid-template-columns: 240px 1fr; grid-template-areas: "nav main"; }
+.topbar { display: none; }
+.sidebar { grid-area: nav; background: var(--tinta); color: #fff; display: flex; flex-direction: column; padding: 1rem; gap: .25rem; }
+.sidebar .marca { font-size: 1.3rem; font-weight: 700; padding: .5rem .75rem 1rem; }
+.sidebar a { color: #cfd8e0; text-decoration: none; padding: .6rem .75rem; border-radius: 6px; }
+.sidebar a:hover { background: rgba(255,255,255,.08); }
+.sidebar a.activo { background: var(--acento); color: #fff; }
+.sidebar .usuario { margin-top: auto; padding: .75rem; font-size: .9rem; display: grid; gap: .5rem; }
+.sidebar .usuario .btn-ghost { color: #fff; border-color: rgba(255,255,255,.4); }
+.contenido { grid-area: main; padding: 1.5rem; min-width: 0; }
+
+/* ---------- Componentes ---------- */
+.tarjeta { background: var(--superficie); border: 1px solid var(--borde); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.encabezado { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.tabs { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+
+.btn { background: var(--acento); color: #fff; border: 1px solid var(--acento); padding: .55rem 1rem; border-radius: 6px; font: inherit; cursor: pointer; }
+.btn:hover { background: var(--acento-oscuro); }
+.btn-ghost { background: transparent; color: var(--acento); }
+.btn-ghost:hover { background: rgba(14,124,134,.1); }
+.btn:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 3px solid #f0b429; outline-offset: 2px; }
+
+.formulario { display: grid; gap: .6rem; }
+label { display: grid; gap: .3rem; font-size: .9rem; font-weight: 600; }
+label.check { display: flex; align-items: center; gap: .4rem; font-weight: 400; }
+input, select { font: inherit; padding: .5rem .6rem; border: 1px solid var(--borde); border-radius: 6px; background: #fff; width: 100%; }
+input[type='checkbox'] { width: auto; }
+.grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: .75rem; }
+.acciones { display: flex; gap: .5rem; flex-wrap: wrap; }
+.filtros { display: flex; gap: .75rem; flex-wrap: wrap; align-items: end; }
+.filtros > * { flex: 1 1 180px; }
+.filtros .btn { flex: 0 0 auto; }
+
+.error { color: var(--peligro); font-size: .85rem; }
+.alerta { padding: .6rem .8rem; border-radius: 6px; margin-bottom: .75rem; }
+.alerta-error { background: var(--peligro-fondo); color: var(--peligro); }
+.alerta-ok { background: var(--ok-fondo); color: var(--ok); }
+
+.tabla-contenedor { overflow-x: auto; padding: 0; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; }
+th, td { padding: .65rem .8rem; text-align: left; border-bottom: 1px solid var(--borde); }
+th { font-size: .85rem; color: var(--texto-suave); }
+tr.inactivo td { color: var(--texto-suave); text-decoration: line-through; }
+tr.inactivo td:last-child, tr.inactivo td:nth-last-child(2) { text-decoration: none; }
+.badge { display: inline-block; padding: .1rem .55rem; border-radius: 999px; background: var(--ok-fondo); color: var(--ok); font-size: .85rem; }
+.badge-peligro { background: var(--peligro-fondo); color: var(--peligro); }
+
+.grid-indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.indicador { display: grid; gap: .5rem; text-decoration: none; color: inherit; }
+.indicador strong { font-size: 2rem; }
+.indicador.peligro { border-color: var(--peligro); }
+.indicador.peligro strong { color: var(--peligro); }
+
+/* ---------- Login ---------- */
+.login-fondo { min-height: 100vh; display: grid; place-items: center; padding: 1rem; background: var(--tinta); }
+.login-caja { width: min(380px, 100%); display: grid; gap: .6rem; margin: 0; }
+.login-caja h1 { margin: 0; }
+
+/* ---------- Tableta y móvil ---------- */
+@media (max-width: 800px) {
+  .shell { grid-template-columns: 1fr; grid-template-areas: "top" "nav" "main"; }
+  .topbar { grid-area: top; display: flex; justify-content: space-between; align-items: center; background: var(--tinta); color: #fff; padding: .6rem 1rem; }
+  .topbar .btn-ghost { color: #fff; border-color: rgba(255,255,255,.4); }
+  .sidebar { display: none; }
+  .sidebar.abierto { display: flex; }
+  .sidebar .marca { display: none; }
+  .contenido { padding: 1rem; }
+}

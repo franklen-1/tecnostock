@@ -1,0 +1,42 @@
+<h1>Historial de movimientos</h1>
+
+<div class="tarjeta filtros">
+  <select (change)="idProducto.set(+$any($event.target).value)">
+    <option value="0" [selected]="idProducto() === 0">Todos los productos</option>
+    @for (p of productos(); track p.id_producto) {
+      <option [value]="p.id_producto">{{ p.codigo }} — {{ p.nombre }}</option>
+    }
+  </select>
+  <label>Desde <input type="date" [value]="desde()" (change)="desde.set($any($event.target).value)" /></label>
+  <label>Hasta <input type="date" [value]="hasta()" (change)="hasta.set($any($event.target).value)" /></label>
+  <button class="btn" (click)="consultar()">Consultar</button>
+  <button class="btn btn-ghost" (click)="limpiar()">Limpiar</button>
+</div>
+
+@if (error()) { <div class="alerta alerta-error">{{ error() }}</div> }
+
+<div class="tarjeta tabla-contenedor">
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th><th>Tipo</th><th>Producto</th><th class="num">Cantidad</th>
+        <th>Motivo</th><th class="num">Stock anterior</th><th class="num">Stock posterior</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (m of movimientos(); track m.id_movimiento) {
+        <tr>
+          <td>{{ m.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td><span class="badge" [class.badge-peligro]="m.tipo === 'S'">{{ m.tipo === 'E' ? 'Entrada' : 'Salida' }}</span></td>
+          <td>{{ m.codigo }} — {{ m.producto }}</td>
+          <td class="num">{{ m.cantidad }}</td>
+          <td>{{ m.motivo }}</td>
+          <td class="num">{{ m.stock_anterior }}</td>
+          <td class="num">{{ m.stock_posterior }}</td>
+        </tr>
+      } @empty {
+        <tr><td colspan="7" class="muted">No hay movimientos para los filtros elegidos.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
