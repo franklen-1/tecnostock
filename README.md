@@ -28,7 +28,32 @@ Flujo de una petición: `api → service → repository → procedimiento almace
 - Node.js 22+ y Angular CLI 22 (`npm i -g @angular/cli@22`)
 
 ## Instalación y ejecución
+### 1. Base de datos
 
+En SQL Server Management Studio (SSMS) ejecuta, en orden: `database/01_schema.sql`, `02_procedimientos.sql`, `03_datos_iniciales.sql`.
+
+### 2. Backend
+
+```
+cd backend
+python -m venv .venv
+.venv\Scripts\activate          # Windows  (Linux/Mac: source .venv/bin/activate)
+pip install -r requirements.txt
+copy .env.example .env          # y edita DB_SERVER, DB_USER, DB_PASS, DB_NOMBRE
+uvicorn app.main:app --reload
+```
+
+API en http://localhost:8000 · documentación Swagger en http://localhost:8000/docs
+
+### 3. Frontend
+
+```
+cd frontend
+npm install
+ng serve
+```
+
+Abre http://localhost:4200 — usuario de prueba: **admin / admin123**.
 ### 1. Base de datos
 
 ### 2. Backend
