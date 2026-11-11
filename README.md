@@ -30,7 +30,6 @@ Flujo de una petición: `api → service → repository → procedimiento almace
 ## Instalación y ejecución
 
 ### 1. Base de datos
-En SQL Server Management Studio ejecuta, en orden: `database/01_schema.sql`, `02_procedimientos.sql`, `03_datos_iniciales.sql`.
 
 ### 2. Backend
 
