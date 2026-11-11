@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormField, form, minLength, maxLength, required, submit } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { mensajeError } from '../../core/utils';
 @Component({
   selector: 'app-categorias',
   imports: [FormField],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './categorias.html',
 })
 export class Categorias {
@@ -45,7 +46,7 @@ export class Categorias {
         this.mensaje.set('Categoría registrada.');
         this.modelo.set({ nombre: '', descripcion: '' });
         this.formulario().reset();
-        this.cargar();                        // se vuelve a consultar la API para mostrar el cambio
+        this.cargar(); // se vuelve a consultar la API para mostrar el cambio
       } catch (e) {
         this.error.set(mensajeError(e));
       }

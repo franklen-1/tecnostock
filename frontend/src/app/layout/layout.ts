@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { AuthService } from '../core/services/auth.service';
@@ -6,11 +6,12 @@ import { AuthService } from '../core/services/auth.service';
 @Component({
   selector: 'app-layout',
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './layout.html',
 })
 export class Layout {
   auth = inject(AuthService);
-  menuAbierto = signal(false);   // en móvil el menú se muestra/oculta
+  menuAbierto = signal(false); // en móvil el menú se muestra/oculta
 
   enlaces = [
     { ruta: '/dashboard', texto: 'Panel principal' },
