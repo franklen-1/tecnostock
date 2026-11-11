@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormField, form, required, submit } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
@@ -10,7 +10,8 @@ import { mensajeError } from '../../core/utils';
   selector: 'app-login',
   imports: [FormField],
   templateUrl: './login.html',
-   styleUrl: './login.css'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './login.css',
 })
 export class Login {
   private auth = inject(AuthService);

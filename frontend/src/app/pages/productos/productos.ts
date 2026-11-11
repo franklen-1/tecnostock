@@ -1,6 +1,14 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { FormField, form, maxLength, minLength, required, submit, validate } from '@angular/forms/signals';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  FormField,
+  form,
+  maxLength,
+  minLength,
+  required,
+  submit,
+  validate,
+} from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 
 import { Categoria, Producto } from '../../core/models';
@@ -13,7 +21,7 @@ const VACIO = {
   codigo: '',
   nombre: '',
   descripcion: '',
-  id_categoria: '',      // texto, porque un <select> devuelve texto; se convierte a número al guardar
+  id_categoria: '', // texto, porque un <select> devuelve texto; se convierte a número al guardar
   precio_compra: 0,
   precio_venta: 0,
   stock_minimo: 0,
@@ -22,6 +30,7 @@ const VACIO = {
 @Component({
   selector: 'app-productos',
   imports: [FormField, CurrencyPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './productos.html',
 })
 export class Productos {
@@ -30,7 +39,7 @@ export class Productos {
 
   // ---- Datos de la pantalla ----
   productos = signal<Producto[]>([]);
-  categorias = signal<Categoria[]>([]);        // se cargan desde la API (no están escritas en el código)
+  categorias = signal<Categoria[]>([]); // se cargan desde la API (no están escritas en el código)
   mensaje = signal('');
   error = signal('');
 
@@ -41,7 +50,7 @@ export class Productos {
 
   // ---- Formulario (Signal Forms) ----
   mostrarFormulario = signal(false);
-  editandoId = signal<number | null>(null);     // null = creando, número = editando ese producto
+  editandoId = signal<number | null>(null); // null = creando, número = editando ese producto
   modelo = signal({ ...VACIO });
   formulario = form(this.modelo, (c) => {
     required(c.codigo, { message: 'El código es obligatorio.' });
@@ -53,11 +62,20 @@ export class Productos {
     required(c.id_categoria, { message: 'Selecciona una categoría.' });
     // Validaciones propias: devuelven un error {kind, message} o null si todo está bien
     validate(c.precio_compra, ({ value }) =>
-      value() > 0 ? null : { kind: 'precio', message: 'El precio de compra debe ser mayor que cero.' });
+      value() > 0
+        ? null
+        : { kind: 'precio', message: 'El precio de compra debe ser mayor que cero.' },
+    );
     validate(c.precio_venta, ({ value }) =>
-      value() > 0 ? null : { kind: 'precio', message: 'El precio de venta debe ser mayor que cero.' });
+      value() > 0
+        ? null
+        : { kind: 'precio', message: 'El precio de venta debe ser mayor que cero.' },
+    );
     validate(c.stock_minimo, ({ value }) =>
-      Number.isInteger(value()) && value() >= 0 ? null : { kind: 'stock', message: 'El stock mínimo debe ser un entero mayor o igual a cero.' });
+      Number.isInteger(value()) && value() >= 0
+        ? null
+        : { kind: 'stock', message: 'El stock mínimo debe ser un entero mayor o igual a cero.' },
+    );
   });
 
   constructor() {
@@ -72,9 +90,18 @@ export class Productos {
   }
 
   // ---- Filtros ----
-  alBuscar(texto: string) { this.busqueda.set(texto); this.cargar(); }
-  alFiltrarCategoria(valor: string) { this.filtroCategoria.set(Number(valor)); this.cargar(); }
-  alCambiarActivos(marcado: boolean) { this.soloActivos.set(marcado); this.cargar(); }
+  alBuscar(texto: string) {
+    this.busqueda.set(texto);
+    this.cargar();
+  }
+  alFiltrarCategoria(valor: string) {
+    this.filtroCategoria.set(Number(valor));
+    this.cargar();
+  }
+  alCambiarActivos(marcado: boolean) {
+    this.soloActivos.set(marcado);
+    this.cargar();
+  }
 
   // ---- Abrir / cerrar formulario ----
   nuevo() {
@@ -101,7 +128,9 @@ export class Productos {
     this.mostrarFormulario.set(true);
   }
 
-  cancelar() { this.mostrarFormulario.set(false); }
+  cancelar() {
+    this.mostrarFormulario.set(false);
+  }
 
   // ---- Guardar (crear o actualizar) ----
   guardar(evento: Event) {
@@ -124,7 +153,7 @@ export class Productos {
         else await firstValueFrom(this.productoService.actualizar(id, datos));
         this.mensaje.set(id === null ? 'Producto registrado.' : 'Producto actualizado.');
         this.mostrarFormulario.set(false);
-        this.cargar();                         // refresca el listado con lo que hay en SQL Server
+        this.cargar(); // refresca el listado con lo que hay en SQL Server
       } catch (e) {
         this.error.set(mensajeError(e));
       }
@@ -135,10 +164,16 @@ export class Productos {
   cambiarEstado(p: Producto) {
     this.limpiarMensajes();
     this.productoService.cambiarEstado(p.id_producto, !p.activo).subscribe({
-      next: () => { this.mensaje.set(p.activo ? 'Producto desactivado.' : 'Producto activado.'); this.cargar(); },
+      next: () => {
+        this.mensaje.set(p.activo ? 'Producto desactivado.' : 'Producto activado.');
+        this.cargar();
+      },
       error: (e) => this.error.set(mensajeError(e)),
     });
   }
 
-  private limpiarMensajes() { this.mensaje.set(''); this.error.set(''); }
+  private limpiarMensajes() {
+    this.mensaje.set('');
+    this.error.set('');
+  }
 }

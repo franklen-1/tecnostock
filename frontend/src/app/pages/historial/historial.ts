@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { Movimiento, Producto } from '../../core/models';
 import { MovimientoService } from '../../core/services/movimiento.service';
@@ -9,6 +9,7 @@ import { mensajeError } from '../../core/utils';
 @Component({
   selector: 'app-historial',
   imports: [DatePipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './historial.html',
 })
 export class Historial {

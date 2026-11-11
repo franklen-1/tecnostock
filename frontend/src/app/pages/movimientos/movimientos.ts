@@ -1,5 +1,13 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { FormField, form, maxLength, minLength, required, submit, validate } from '@angular/forms/signals';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  FormField,
+  form,
+  maxLength,
+  minLength,
+  required,
+  submit,
+  validate,
+} from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 
 import { Producto } from '../../core/models';
@@ -10,13 +18,14 @@ import { ahoraLocal, mensajeError } from '../../core/utils';
 @Component({
   selector: 'app-movimientos',
   imports: [FormField],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './movimientos.html',
 })
 export class Movimientos {
   private movimientoService = inject(MovimientoService);
   private productoService = inject(ProductoService);
 
-  tipo = signal<'E' | 'S'>('E');                 // E = entrada, S = salida
+  tipo = signal<'E' | 'S'>('E'); // E = entrada, S = salida
   productos = signal<Producto[]>([]);
   mensaje = signal('');
   error = signal('');
@@ -25,7 +34,10 @@ export class Movimientos {
   formulario = form(this.modelo, (c) => {
     required(c.id_producto, { message: 'Selecciona un producto.' });
     validate(c.cantidad, ({ value }) =>
-      Number.isInteger(value()) && value() > 0 ? null : { kind: 'cantidad', message: 'La cantidad debe ser un entero mayor que cero.' });
+      Number.isInteger(value()) && value() > 0
+        ? null
+        : { kind: 'cantidad', message: 'La cantidad debe ser un entero mayor que cero.' },
+    );
     required(c.fecha, { message: 'La fecha es obligatoria.' });
     required(c.motivo, { message: 'El motivo es obligatorio.' });
     minLength(c.motivo, 3, { message: 'El motivo debe tener al menos 3 caracteres.' });
@@ -33,8 +45,9 @@ export class Movimientos {
   });
 
   // Producto elegido en el formulario (para mostrar su stock actual)
-  productoSeleccionado = computed(() =>
-    this.productos().find((p) => String(p.id_producto) === this.modelo().id_producto) ?? null);
+  productoSeleccionado = computed(
+    () => this.productos().find((p) => String(p.id_producto) === this.modelo().id_producto) ?? null,
+  );
 
   constructor() {
     this.cargarProductos();
@@ -63,15 +76,21 @@ export class Movimientos {
         motivo: m.motivo.trim(),
       };
       try {
-        if (this.tipo() === 'E') await firstValueFrom(this.movimientoService.registrarEntrada(datos));
+        if (this.tipo() === 'E')
+          await firstValueFrom(this.movimientoService.registrarEntrada(datos));
         else await firstValueFrom(this.movimientoService.registrarSalida(datos));
 
         this.mensaje.set(this.tipo() === 'E' ? 'Entrada registrada.' : 'Salida registrada.');
-        this.modelo.set({ id_producto: m.id_producto, cantidad: 1, fecha: ahoraLocal(), motivo: '' });
+        this.modelo.set({
+          id_producto: m.id_producto,
+          cantidad: 1,
+          fecha: ahoraLocal(),
+          motivo: '',
+        });
         this.formulario().reset();
-        this.cargarProductos();                // se vuelve a leer el stock actualizado desde la API
+        this.cargarProductos(); // se vuelve a leer el stock actualizado desde la API
       } catch (e) {
-        this.error.set(mensajeError(e));       // ej. "Stock insuficiente..." viene del procedimiento almacenado
+        this.error.set(mensajeError(e)); // ej. "Stock insuficiente..." viene del procedimiento almacenado
       }
     });
   }
