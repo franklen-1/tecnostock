@@ -33,15 +33,6 @@ Flujo de una petición: `api → service → repository → procedimiento almace
 En SQL Server Management Studio ejecuta, en orden: `database/01_schema.sql`, `02_procedimientos.sql`, `03_datos_iniciales.sql`.
 
 ### 2. Backend
-```bash
-cd backend
-python -m venv .venv
-.venv\Scripts\activate          # Windows  (Linux/Mac: source .venv/bin/activate)
-pip install -r requirements.txt
-copy .env.example .env          # y edita DB_SERVER, DB_USER, DB_PASS, DB_NOMBRE
-uvicorn app.main:app --reload
-```
-API en http://localhost:8000 · documentación Swagger en http://localhost:8000/docs
 
 ### 3. Frontend
 La carpeta `frontend/src` contiene el código fuente. Si aún no tienes el proyecto Angular:
